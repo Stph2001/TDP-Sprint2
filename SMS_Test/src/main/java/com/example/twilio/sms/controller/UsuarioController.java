@@ -33,9 +33,9 @@ public class UsuarioController {
         Random rand = new Random();
         int code = 10000000 + rand.nextInt(100000000);
 
-        Twilio.init("ACbb36ac7956a5d2cd63b5ccce9e251592", "9d8e3f9a6d692c9fff7fe99bc1fb96dd");
+        Twilio.init("", "");
         Message.creator(new PhoneNumber("+51" + celUsuario),
-                new PhoneNumber("+18159575610"), "Ahora tu clave es: " + code).create();
+                new PhoneNumber(""), "Ahora tu clave es: " + code).create();
 
 
         usuarioService.updateClaveBySMS(celUsuario, String.valueOf(code));
