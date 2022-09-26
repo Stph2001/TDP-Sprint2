@@ -7,6 +7,7 @@ import com.example.twilio.sms.responses.TwilioResponse;
 import com.example.twilio.sms.services.UsuarioService;
 import com.twilio.Twilio;
 import com.twilio.rest.api.v2010.account.Message;
+import com.twilio.rest.api.v2010.account.ValidationRequest;
 import com.twilio.type.PhoneNumber;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,7 +24,13 @@ public class UsuarioController {
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/usuarios")
     public TwilioResponse<UsuarioDto> createUsuario(@RequestBody CreateUsuarioDto createUsuarioDto) throws TwilioException{
-        return new TwilioResponse<>("Success", String.valueOf(HttpStatus.OK), "OK",
+        Twilio.init("ACbb36ac7956a5d2cd63b5ccce9e251592", "c55ad6ae7d1f04e8baeb1229a0e7c2ec");
+        ValidationRequest validationRequest = ValidationRequest.creator(
+                new PhoneNumber("+51" + createUsuarioDto.getCel()))
+                .setFriendlyName(createUsuarioDto.getNombre())
+                .create();
+
+        return new TwilioResponse<>("Success", String.valueOf(HttpStatus.OK), validationRequest.getFriendlyName(),
                 usuarioService.createUsuario(createUsuarioDto));
     }
 
@@ -33,12 +40,13 @@ public class UsuarioController {
         Random rand = new Random();
         int code = 10000000 + rand.nextInt(100000000);
 
-        Twilio.init("", "");
-        Message.creator(new PhoneNumber("+51" + celUsuario),
-                new PhoneNumber(""), "Ahora tu clave es: " + code).create();
+        Twilio.init("ACbb36ac7956a5d2cd63b5ccce9e251592", "c55ad6ae7d1f04e8baeb1229a0e7c2ec");
+        Message.creator(new PhoneNumber("+51" + "924580494"),
+                new PhoneNumber("+18159575610"), "Ahora tu clave es: " + code).create();
 
 
-        usuarioService.updateClaveBySMS(celUsuario, String.valueOf(code));
+
+        //usuarioService.updateClaveBySMS(celUsuario, String.valueOf(code));
     }
 
     @ResponseStatus(HttpStatus.OK)
