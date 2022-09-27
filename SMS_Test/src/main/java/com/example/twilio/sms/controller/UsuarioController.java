@@ -24,13 +24,7 @@ public class UsuarioController {
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/usuarios")
     public TwilioResponse<UsuarioDto> createUsuario(@RequestBody CreateUsuarioDto createUsuarioDto) throws TwilioException{
-        Twilio.init("ACbb36ac7956a5d2cd63b5ccce9e251592", "c55ad6ae7d1f04e8baeb1229a0e7c2ec");
-        ValidationRequest validationRequest = ValidationRequest.creator(
-                new PhoneNumber("+51" + createUsuarioDto.getCel()))
-                .setFriendlyName(createUsuarioDto.getNombre())
-                .create();
-
-        return new TwilioResponse<>("Success", String.valueOf(HttpStatus.OK), validationRequest.getFriendlyName(),
+        return new TwilioResponse<>("Success", String.valueOf(HttpStatus.OK),"OK",
                 usuarioService.createUsuario(createUsuarioDto));
     }
 
@@ -41,12 +35,12 @@ public class UsuarioController {
         int code = 10000000 + rand.nextInt(100000000);
 
         Twilio.init("ACbb36ac7956a5d2cd63b5ccce9e251592", "c55ad6ae7d1f04e8baeb1229a0e7c2ec");
-        Message.creator(new PhoneNumber("+51" + "924580494"),
+        Message.creator(new PhoneNumber("+51" + celUsuario),
                 new PhoneNumber("+18159575610"), "Ahora tu clave es: " + code).create();
 
 
 
-        //usuarioService.updateClaveBySMS(celUsuario, String.valueOf(code));
+        usuarioService.updateClaveBySMS(celUsuario, String.valueOf(code));
     }
 
     @ResponseStatus(HttpStatus.OK)
